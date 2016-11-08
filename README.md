@@ -24,4 +24,4 @@ PRE-REQUISITES
 4. Specify the path to static serve the uploaded files correctly.
    Change path correctly at the following location:
    server/app.js --> line 38
-      app.use('/server', express.static('<absolute path of server folder>'));
+      app.use('/server', express.static('absolute path of server folder'));
