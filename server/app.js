@@ -35,7 +35,7 @@ app.use(function(req, res, next) { //allow cross origin requests
     next();
 });
 
-app.use('/server', express.static('C:/dwe_admin-master/server'));
+app.use('/server', express.static('./server'));
 // Start server
 server.listen(config.port, config.ip, function () {
   console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
