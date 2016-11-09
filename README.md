@@ -19,9 +19,3 @@ PRE-REQUISITES
     npm install
 
 3. Then enter into the server directory and enter 'grunt serve'. This will host the server script on localhost:9000.
-
- ***[IMPORTANT] 
-4. Specify the path to static serve the uploaded files correctly.
-   Change path correctly at the following location:
-   server/app.js --> line 38
-      app.use('/server', express.static('absolute path of server folder'));
