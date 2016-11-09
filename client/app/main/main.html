@@ -96,7 +96,7 @@
                             <br>
                             <div class="img-content">
                                 <img ng-src="{{image}}" height="100px" width="100px" />
-                                <button type = "button" class = "btn btn-danger btn-transparent" ng-click="up.remove($index)"><span class="glyphicon glyphicon-remove"></span></button>
+                                <button type = "button" class = "btn btn-danger btn-transparent" ng-click="up.removeImage($index)"><span class="glyphicon glyphicon-remove"></span></button>
                                 
                                 
                             </div>
@@ -119,23 +119,38 @@
     <br />
         <button class="acc-button"><div class="accordian-block accordian-panel"> <li ng-click="up.accordianFunction(4)"> Upload Video </li></div></button>
             <div class="videopart" ng-show="up.showVideoPart">
-                <label>Select Video</label>
-                <input 
-                    type="file" 
-                    ngf-select 
-                    ng-model="up.file" 
-                    name="file" 
-                    ngf-pattern="'video/*'"
-                    accept="video/*"                     
-                />
-                <br>
-                <div>
-                    <button type = "button" class = "btn btn-primary" ng-click="up.submit(2)" >Upload Video</button>
-                </div>
-                <p>{{up.progressText2}}</p>
-                <progress class="progbar" min="0" value="{{up.vidUploadProgress}}" max="100" ></progress>
-                
-            </div> 
+                <div class="clearfix">
+                    <div class="col-md-4">
+                        <label>Select Video</label>
+                        <input 
+                            type="file" 
+                            ngf-select 
+                            ng-model="up.file" 
+                            name="file" 
+                            ngf-pattern="'video/*'"
+                            accept="video/*"                     
+                        />
+                        <br>
+                        <div>
+                            <button type = "button" class = "btn btn-primary" ng-click="up.submit(2)" >Upload Video</button>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <div ng-repeat="videosrc in up.videoPath track by $index">
+                            <br>
+                            <div class="img-content">
+                                <video ng-src="{{videosrc}}" height="100px" width="100px" />
+                                <button ng-if="up.videoPath.length>0" type = "button" class = "btn btn-danger btn-transparent" ng-click="up.removeVideo($index)"><span class="glyphicon glyphicon-remove"></span></button>
+                            </div>
+                        </div>
+
+                    </div>
+                    <p>{{up.progressText2}}</p>
+                    <progress class="progbar" min="0" value="{{up.vidUploadProgress}}" max="100" ></progress>
+                    
+                </div> 
+            </div>
     </form>
 
     <br>

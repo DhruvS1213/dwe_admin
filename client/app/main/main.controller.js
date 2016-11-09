@@ -20,66 +20,55 @@ angular.module('dweAdminApp')
 
     
     function getContents(){
+      console.log('inside getcontents');
+      $http.get('/api/contents').success(function(contents) {
+      vm.contents = contents;
+      console.log('vm.contents');
+      console.log(vm.contents);
 
+      // Checking whether any entry exists in mongod
+      if(vm.contents.length != 0){
+        
+        // Checking whether title is added or not
+        if(vm.contents[0].title === undefined){
+          vm.title = '';
+        }
+        else{
+          vm.title = vm.contents[0].title;  
+        }
+        
+        //Checking whether text content is added or not
+        if(vm.contents[0].textContent === undefined){
+          vm.data = '';
+        }
+        else{
+          vm.data = vm.contents[0].textContent;  
+        }
+        
+        // Checking whether video content is added or not
+        if(vm.contents[0].videoContent == undefined || vm.contents[0].videoContent.length == 0){
+           vm.videoPath = [];
+        }
+        else{
+          var me = vm.contents[0].videoContent.split(",");
+          vm.videoPath= me;
+        }
 
-         console.log('inside getcontents');
-         $http.get('/api/contents').success(function(contents) {
-          vm.contents = contents;
-          console.log('vm.contents');
-          console.log(vm.contents);
-          if(vm.contents.length != 0){
-          //console.log(vm.contents[0]._id);
-          if(vm.contents[0].title === undefined){
-            vm.title = '';
+        // Checking whether image content is added or not
+        if(vm.contents[0].imageDetail === undefined){
+          vm.images = [];
+          vm.imgDescription = [];
+        }
+        else{
+          vm.imgJSON = vm.contents[0].imageDetail;
+          for(var i in vm.contents[0].imageDetail){
+              vm.images[i] = vm.imgJSON[i].imagePath;
+              vm.imgDescription[i] = vm.imgJSON[i].imageDescription;
           }
-          else{
-            vm.title = vm.contents[0].title;  
-          }
-          
-          if(vm.contents[0].title === undefined){
-            vm.data = '';
-          }
-          else{
-            vm.data = vm.contents[0].textContent;  
-          }
-          
-          
-          // if(vm.contents[0].imageContent == undefined){
-          //   vm.images = [];  
-          // }
-          // else{
-          //   var my = vm.contents[0].imageContent.split(",");
-          //   console.log('image paths retrieved');
-          //   console.log(my);
-          //   vm.images= my;
-          //   //console.log(vm.images);  
-          // }
-          
-          if(vm.contents[0].videoContent == undefined){
-             vm.videoPath = [];
-          }
-          else{
-            var me = vm.contents[0].videoContent.split(",");
-            
-            vm.videoPath= me;
-            
-          }
-
-          if(vm.contents[0].imageDetail === undefined){
-            vm.images = [];
-            vm.imgDescription = [];
-          }
-          else{
-            vm.imgJSON = vm.contents[0].imageDetail;
-            for(var i in vm.contents[0].imageDetail){
-                vm.images[i] = vm.imgJSON[i].imagePath;
-                vm.imgDescription[i] = vm.imgJSON[i].imageDescription;
-            }
-          }
+        }
       }
-
-        });
-    }
+   });
+}
 
     
 
@@ -142,17 +131,19 @@ angular.module('dweAdminApp')
     {
        var blogTitle = CKEDITOR.instances.blogTitle.getData();
        console.log(blogTitle);
+       
        if(vm.contents.length == 0){
          $http.post('/api/contents', {title: blogTitle}).success(function(res){
                 alert("Title Successfully Uploaded");
         });
          getContents();
        }
+       
        else{
-       $http.put('/api/contents/' + vm.contents[0]._id, {title: blogTitle}).success(function(res){
-                alert("Data Successfully Uploaded");
-      });
-   }
+          $http.put('/api/contents/' + vm.contents[0]._id, {title: blogTitle}).success(function(res){
+                  alert("Data Successfully Uploaded");
+          });
+        }  
     };
 
     vm.uploadData = function(head)
@@ -164,7 +155,7 @@ angular.module('dweAdminApp')
                 alert("Title Successfully Uploaded");
             }); 
             getContents();
-       }
+        }
 
 
        else{
@@ -194,13 +185,6 @@ angular.module('dweAdminApp')
             console.log(contentType);
             if(resp.data.error_code === 0){ 
                 console.log(resp.config.data.file.name);
-                
-                
-                
-                // $http.put('/api/contents/' + vm.contents[0]._id, {imageDetail: vm.images}).success(function(res){
-                //      alert("Data Successfully Uploaded");
-                // });                
-
                 $window.alert('Success ' + resp.config.data.file.name + 'uploaded. Response: ');
                 if(contentType === 1)
                 {
@@ -397,7 +381,7 @@ angular.module('dweAdminApp')
 
 
 
- vm.remove = function(index){
+ vm.removeImage = function(index){
     console.log('image requrest to delete')
     console.log(index);
 
@@ -410,12 +394,26 @@ angular.module('dweAdminApp')
         console.log(vm.imgJSON[i].id);
     }
          $http.put('/api/contents/' + vm.contents[0]._id, {imageDetail: vm.imgJSON }).success(function(res){
-            alert("Data DELETED");
+            alert("Image DELETED Successfully");
             
          });
 
 
 
+ }
+
+
+ vm.removeVideo = function(index){
+  console.log('video delete request made');
+  console.log(index);
+
+  vm.videoPath.splice(index,1);
+  console.log(vm.videoPath)
+
+  $http.put('/api/contents/' + vm.contents[0]._id, {videoContent: vm.videoPath }).success(function(res){
+            alert("Video DELETED Successfully");
+            
+         });
  }
 
 

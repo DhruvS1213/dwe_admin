@@ -85,3 +85,20 @@ input[type=password] {
     color: white;
     text-decoration: none;
 }
+
+.background-imgposition{
+   
+    position: relative;
+    margin-bottom: -225px;
+    margin-left: 675px;
+    top: -216px;
+    z-index: -3;
+}
+
+.logo-position {
+    height: 80px;
+    width: 220px;
+    position: absolute;
+    top: 400px;
+    left: 270px;
+}
