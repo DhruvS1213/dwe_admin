@@ -8,6 +8,10 @@
   </div>
 </header>
   <div ng-controller="MainCtrl as up">
+
+    <select ng-model="up.selectedDemo" ng-options="demo for demo in up.demos">
+    </select>
+
     <br />
     <br />
     <ul>

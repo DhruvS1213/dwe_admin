@@ -13,15 +13,34 @@ angular.module('dweAdminApp')
     vm.videoPath = [];
     vm.accordion=1;
     vm.imgJSON = [];
+    vm.demos = [];
     // console.log(vm.imgJSON);
     var flag=0;
 
     var demourl = 'http://localhost:9000/server/temp/'
 
-    
+    function htmlToPlaintext(text) {
+        return text ? String(text).replace(/<[^>]+>/gm, '') : '';
+    }
+
+
     function getContents(){
       console.log('inside getcontents');
       $http.get('/api/contents').success(function(contents) {
+      
+      //retrieving content titles
+      for (var i in contents){
+        if(contents[i].title === undefined){
+            console.log('No title given');
+        }
+        else{
+            console.log(htmlToPlaintext(contents[i].title));
+            vm.demos.push(htmlToPlaintext(contents[i].title));
+
+        }
+        //vm.demos.push(contents[i].title);
+      }
+
       vm.contents = contents;
       console.log('vm.contents');
       console.log(vm.contents);
@@ -418,4 +437,4 @@ angular.module('dweAdminApp')
 
 
 
-});
+})
