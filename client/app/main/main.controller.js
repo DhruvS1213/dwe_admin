@@ -36,9 +36,7 @@ angular.module('dweAdminApp')
         else{
             console.log(htmlToPlaintext(contents[i].title));
             vm.demos.push(htmlToPlaintext(contents[i].title));
-
         }
-        //vm.demos.push(contents[i].title);
       }
 
       vm.contents = contents;
