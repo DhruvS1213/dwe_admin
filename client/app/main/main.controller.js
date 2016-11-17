@@ -2,92 +2,78 @@
 
 angular.module('dweAdminApp')
   .controller('MainCtrl', function ($scope, $http, socket, Auth, Upload, $window) {
-    console.log(Auth.getCurrentUser().name);
     
     console.log('admin-view');
-    getContents();
+    
     var vm = this;
     vm.contents = [];
+    vm.selectedBlogId = 0;
     vm.images = [];
     vm.imgDescription = [];
     vm.videoPath = [];
     vm.accordion=1;
     vm.imgJSON = [];
-    vm.demos = [];
     // console.log(vm.imgJSON);
     var flag=0;
 
     var demourl = 'http://localhost:9000/server/temp/'
+    getContents();
 
     function htmlToPlaintext(text) {
         return text ? String(text).replace(/<[^>]+>/gm, '') : '';
     }
 
-
-    function getContents(){
-      console.log('inside getcontents');
+    function getContents() {
+     console.log('inside getcontents');
       $http.get('/api/contents').success(function(contents) {
-      
-      //retrieving content titles
-      for (var i in contents){
-        if(contents[i].title === undefined){
-            console.log('No title given');
-        }
-        else{
-            console.log(htmlToPlaintext(contents[i].title));
-            vm.demos.push(htmlToPlaintext(contents[i].title));
-        }
-      }
 
-      vm.contents = contents;
-      console.log('vm.contents');
-      console.log(vm.contents);
+            vm.contents = contents;
+            console.log('vm.contents');
+            console.log(vm.contents);
 
-      // Checking whether any entry exists in mongod
-      if(vm.contents.length != 0){
-        
-        // Checking whether title is added or not
-        if(vm.contents[0].title === undefined){
-          vm.title = '';
-        }
-        else{
-          vm.title = vm.contents[0].title;  
-        }
-        
-        //Checking whether text content is added or not
-        if(vm.contents[0].textContent === undefined){
-          vm.data = '';
-        }
-        else{
-          vm.data = vm.contents[0].textContent;  
-        }
-        
-        // Checking whether video content is added or not
-        if(vm.contents[0].videoContent == undefined || vm.contents[0].videoContent.length == 0){
-           vm.videoPath = [];
-        }
-        else{
-          var me = vm.contents[0].videoContent.split(",");
-          vm.videoPath= me;
-        }
+            // Checking whether any entry exists in mongod
+            if(vm.contents.length != 0){
+            
+                // Checking whether title is added or not
+                if(vm.contents[vm.selectedBlogId].title === undefined){
+                    vm.title = '';
+                }
+                else{
+                    vm.title = vm.contents[vm.selectedBlogId].title;
+                }
+                
+                //Checking whether text content is added or not
+                if(vm.contents[vm.selectedBlogId].textContent === undefined){
+                    vm.data = '';
+                }
+                else{
+                    vm.data = vm.contents[vm.selectedBlogId].textContent;  
+                }
+                
+                // Checking whether video content is added or not
+                if(vm.contents[vm.selectedBlogId].videoContent == undefined || vm.contents[vm.selectedBlogId].videoContent.length == 0){
+                    vm.videoPath = [];
+                }
+                else{
+                    var me = vm.contents[vm.selectedBlogId].videoContent.split(",");
+                    vm.videoPath= me;
+                }
 
-        // Checking whether image content is added or not
-        if(vm.contents[0].imageDetail === undefined){
-          vm.images = [];
-          vm.imgDescription = [];
-        }
-        else{
-          vm.imgJSON = vm.contents[0].imageDetail;
-          for(var i in vm.contents[0].imageDetail){
-              vm.images[i] = vm.imgJSON[i].imagePath;
-              vm.imgDescription[i] = vm.imgJSON[i].imageDescription;
-          }
-        }
-      }
-   });
-}
-
-    
+                // Checking whether image content is added or not
+                if(vm.contents[vm.selectedBlogId].imageDetail === undefined){
+                    vm.images = [];
+                    vm.imgDescription = [];
+                }
+                else{
+                    vm.imgJSON = vm.contents[vm.selectedBlogId].imageDetail;
+                    for(var i in vm.contents[vm.selectedBlogId].imageDetail){
+                        vm.images[i] = vm.imgJSON[i].imagePath;
+                        vm.imgDescription[i] = vm.imgJSON[i].imageDescription;
+                    }
+                }
+            }
+        });
+    }
 
     vm.accordianFunction = function(id){
         if(id == 1)
